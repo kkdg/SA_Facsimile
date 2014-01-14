@@ -12,15 +12,19 @@ License: GPLv2 (or later)
 class SA_Facsimile {
 
 	public function __construct() {
+		
+
 		require_once "shd/simple_html_dom.php";
 		add_action( 'admin_menu', array( $this, 'init_the_page' ) );	
 		add_action('admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
+
 // echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";        	
 	}
 
 	protected static $instance;
 
 	public static function instance(){
+
 		if (!isset(static::$instance)) {
 			$className = __CLASS__;
 			static::$instance = new $className;
@@ -57,6 +61,11 @@ class SA_Facsimile {
 	}
 
 	public function admin_screen() {
+		
+		if ( ! defined( 'KBOARD_VERSION' ) ) {
+			echo "<p>KBoard가 설치되어 있지 않습니다.</p>";
+			return;
+		} 		
 		$br = '<p></p>';
 		echo '<form enctype="multipart/form-data" action="" method="post">
 				<label for="file3">ZIP 파일</label>
@@ -92,7 +101,8 @@ class SA_Facsimile {
 			}
 			// HTML Parse;
 			$location = __DIR__ . '/upload/my/';
-			$this->parse_files();
+			$target = $this->parse_files();
+
 		}
 
 	}
@@ -136,7 +146,6 @@ class SA_Facsimile {
 			}
 			$this->check_charset();
 	
-
 	}
 
 
@@ -178,10 +187,26 @@ class SA_Facsimile {
 		foreach ( $files as $file ){
 			$html = file_get_html( $file );
 // print_r($html);
+
+			$table = $html->find('table', 0);
+// echo $text;			
+// print_r($text);
+			$title = $table->find('td', 1);
+
+			$content = $table->find('td', 5);
+			// echo $title;
+			// echo $content;
+
+			$title = iconv("EUC-KR", "UTF-8", $title );
+			$content = iconv("EUC-KR", "UTF-8", $content );
+			
+			$target[] = array( $title, $content ) ;
+			
+
 			
 		}
 
-
+		return $target;
 	}
 
 }
