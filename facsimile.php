@@ -173,11 +173,12 @@ class SA_Facsimile {
 	public function parse_files() {
 		$location = __DIR__.'/upload/my/';
 		$files = glob( $location . '*' );
-print_r($files);		
+// print_r($files);		
+		$target = array();
 		foreach ( $files as $file ){
 			$html = file_get_html( $file );
-print_r($html);
-			return;			
+// print_r($html);
+			
 		}
 
 
