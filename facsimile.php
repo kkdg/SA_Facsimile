@@ -15,7 +15,7 @@ class SA_Facsimile {
 		require_once "shd/simple_html_dom.php";
 		add_action( 'admin_menu', array( $this, 'init_the_page' ) );	
 		add_action('admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
-        	
+// echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";        	
 	}
 
 	protected static $instance;
@@ -92,6 +92,7 @@ class SA_Facsimile {
 			}
 			// HTML Parse;
 			$location = __DIR__ . '/upload/my/';
+			$this->parse_files();
 		}
 
 	}
@@ -133,48 +134,55 @@ class SA_Facsimile {
 				$zip->close();
 				unlink( $location . 'db.zip' );
 			}
-			$this->count = $this->count_files();
-	}
-
-
-	public function count_files() {
-	    // integer starts at 0 before counting
-	    $i = 0; 
-	    $dir = __DIR__.'/upload/my/';
-	    if ($handle = opendir($dir)) {
-	        while (($file = readdir($handle)) !== false){
-	            if (!in_array($file, array('.', '..')) && !is_dir($dir.$file)) 
-	                $i++;
-	        }
-	    }
-	    // prints out how many were in the directory
-	    echo "There were $i files";	
-	}
-
-	public function count_files() {
-	    // integer starts at 0 before counting
-	    $i = 0; 
-	    $dir = __DIR__.'/upload/my/';
-	    if ($handle = opendir($dir)) {
-	        while (($file = readdir($handle)) !== false){
-	            if (!in_array($file, array('.', '..')) && !is_dir($dir.$file)) {
-
-
-
-	            }
-	        }
-	    }
-	}	
+			$this->check_charset();
 	
+
+	}
+
+
+	public function check_charset() {
+	    $i = 0; 
+	    $dir = __DIR__.'/upload/my/';
+	    $files = glob( $dir . '*' );
+	    if ( $files !== FALSE ){
+	    	$count = count( $files );
+	    }
+	    $files_to_change = $files;
+		foreach ( $files as $k => &$file ) {
+			$f = explode( '/', $file );
+			$fend = array_pop( $f );
+			if ( ! preg_match( '/.html$/', $fend ) )
+				continue;
+			// preg_replace( "{\\\}", '/', $fend );
+			preg_match_all( '/\d/', $fend, $fres );
+			$fres = implode( '', $fres[0] );
+			$f[] = $fres.".html";
+			$file = implode( '/', $f );
+		}
+// print_r($files);
+		
+		for ( $i = 0; $i < count( $files ); $i++ ){
+			rename( $files_to_change[$i], $files[$i] );
+		}
+
+	    
+
+	}
+
+	
+	public function parse_files() {
+		$location = __DIR__.'/upload/my/';
+		$files = glob( $location . '*' );
+print_r($files);		
+		foreach ( $files as $file ){
+			$html = file_get_html( $file );
+print_r($html);
+			return;			
+		}
+
+
+	}
+
 }
 
-
 SA_Facsimile::instance();
-
-
-
-
-
-
-
-    
