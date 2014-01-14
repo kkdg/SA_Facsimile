@@ -14,7 +14,7 @@ class SA_Facsimile {
 	public function __construct() {
 		
 
-		require_once "shd/simple_html_dom.php";
+		require_once "lib/simple_html_dom.php";
 		add_action( 'admin_menu', array( $this, 'init_the_page' ) );	
 		add_action('admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
    	
