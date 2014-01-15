@@ -13,10 +13,9 @@ class SA_Facsimile {
 
 	public function __construct() {
 		
-
 		require_once "lib/simple_html_dom.php";
 		add_action( 'admin_menu', array( $this, 'init_the_page' ) );	
-		add_action('admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
    	
 	}
 
@@ -102,8 +101,7 @@ class SA_Facsimile {
 					}
 				}
 				$echo .= "<p>=========================</p>";
-
-				echo $echo;	
+				
 			}
 			// HTML Parse;
 			$location = __DIR__ . '/upload/my/';
@@ -117,6 +115,7 @@ class SA_Facsimile {
 				$this->board_id = $board;
 				$this->insert_kboard( $trgt, $board );
 			}
+			echo $echo;	
 		}
 
 	}
@@ -164,7 +163,6 @@ class SA_Facsimile {
 
 
 	public function check_charset() {
-	    $i = 0; 
 	    $dir = __DIR__.'/upload/my/';
 	    $files = glob( $dir . '*' );
 	    if ( $files !== FALSE ){
@@ -187,8 +185,6 @@ class SA_Facsimile {
 		for ( $i = 0; $i < count( $files ); $i++ ){
 			rename( $files_to_change[$i], $files[$i] );
 		}
-
-	    
 
 	}
 
