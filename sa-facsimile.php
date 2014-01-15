@@ -194,25 +194,34 @@ class SA_Facsimile {
 		$files = glob( $location . '*' );
 	
 		$target = array();
+		$err = 0;
 		foreach ( $files as $file ){
 			$f = explode( '/', $file );
 			$fend = array_pop( $f );
 			if ( ! preg_match( '/.html$/', $fend ) )
-				continue;			
-			$html = file_get_html( $file );
+				continue;	
+			try { 		
+				$html = @file_get_html( $file );
 
-			$table = $html->find('table', 0);
+				if ( ! empty( $html ) ){
+					$table = @$html->find('table', 0);
+					if ( ! empty( $table ) ){
+						$title = @$table->find('td', 1)->plaintext;
 
-			$title = $table->find('td', 1)->plaintext;
+						$content = @$table->find('td', 5)->plaintext;	
 
-			$content = $table->find('td', 5)->plaintext;
+						$title = iconv("EUC-KR", "UTF-8", $title );
+						$content = iconv("EUC-KR", "UTF-8", $content );
+						
+						$target[] = array( $title, $content );		
+					}
+				}
 
-			$title = iconv("EUC-KR", "UTF-8", $title );
-			$content = iconv("EUC-KR", "UTF-8", $content );
-			
-			$target[] = array( $title, $content ) ;
-			
+			} catch ( Exception $e ) {
+				$err++;
+			}
 		}
+		echo $err == 0 ? "" :  "Error counts : ". $err;
 
 		return $target;
 	}
