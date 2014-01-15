@@ -112,6 +112,7 @@ class SA_Facsimile {
 			foreach ( $target as $trgt ){
 				$this->title = $trgt[0];
 				$this->content = $trgt[1];
+				$this->name = $trgt[2];
 				$this->board_id = $board;
 				$this->insert_kboard( $trgt, $board );
 			}
@@ -210,15 +211,23 @@ class SA_Facsimile {
 
 					$content = @$table->find('td', 5)->plaintext;	
 
+					$name = @$table->find('td', 2)->plaintext;
+
 					$title = iconv("EUC-KR", "UTF-8", $title );
 					$content = iconv("EUC-KR", "UTF-8", $content );
-					
-					$target[] = array( $title, $content );	
+					$content = mb_substr( $content, 5, NULL, 'UTF-8' );
 
-					unlink( $file );						
+					$name = iconv("EUC-KR", "UTF-8", $name );
+					
+					$name = mb_substr( $name, 4, NULL, 'UTF-8' );
+
+					$target[] = array( $title, $content, $name  );	
+
+					// unlink( $file );						
 				}
 			}
 
+			unlink( $file );
 
 		}
 
@@ -235,7 +244,7 @@ class SA_Facsimile {
 		
 		$data['board_id'] = $board;
 		$data['member_uid'] = intval($userdata->data->ID);
-		$data['member_display'] = $this->member_display?$this->member_display:$userdata->data->display_name;
+		$data['member_display'] = $target[2];
 		$data['title'] = $target[0];
 		$data['content'] = $target[1];
 		$data['date'] = date("YmdHis", current_time('timestamp'));
