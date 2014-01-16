@@ -182,7 +182,7 @@ class SA_Facsimile {
 			$file = implode( '/', $f );
 		}
 
-		
+		 
 		for ( $i = 0; $i < count( $files ); $i++ ){
 			rename( $files_to_change[$i], $files[$i] );
 		}
