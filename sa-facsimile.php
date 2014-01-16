@@ -136,7 +136,7 @@ class SA_Facsimile {
 			  else
 			    {
 			    echo "Upload: " . $_FILES[$file]["name"] . "<br>";
-			    echo "Size: " . ($_FILES[$file]["size"] / 1024) . " kB<br>";
+			    echo "Size: " . (int)($_FILES[$file]["size"] / 1024) . " kB<br>";
 
 				if ( $file == 'file3' ){
 					$prod = 'db.' . $extension;
@@ -173,7 +173,7 @@ class SA_Facsimile {
 		foreach ( $files as $k => &$file ) {
 			$f = explode( '/', $file );
 			$fend = array_pop( $f );
-			if ( ! preg_match( '/.html$/', $fend ) )
+			if ( ! preg_match( '/.(html|htm)$/', $fend ) )
 				continue;
 
 			preg_match_all( '/\d/', $fend, $fres );
