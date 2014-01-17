@@ -223,15 +223,12 @@ class SA_Facsimile {
 
 					$target[] = array( $title, $content, $name  );	
 
-					// unlink( $file );						
 				}
 			}
 
 			unlink( $file );
 
 		}
-
-
 
 		return $target;
 	}
