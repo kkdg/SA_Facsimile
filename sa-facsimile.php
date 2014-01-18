@@ -16,7 +16,7 @@ class SA_Facsimile {
 		require_once "lib/simple_html_dom.php";
 		add_action( 'admin_menu', array( $this, 'init_the_page' ) );	
 		add_action( 'admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
-   	
+   		$this->gallery_importer();
 	}
 
 	protected static $instance;
@@ -295,6 +295,10 @@ class SA_Facsimile {
 		if(!$this->resource) $this->getList();
 		$this->row = mysql_fetch_object($this->resource);
 		return $this->row;
+	}
+
+	public function gallery_importer(){
+		require_once 'app.php';
 	}
 }
 
