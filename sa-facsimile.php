@@ -9,6 +9,8 @@ Author URI:
 License: GPLv2 (or later) 
 */
 
+
+
 class SA_Facsimile {
 
 	public function __construct() {
@@ -16,7 +18,6 @@ class SA_Facsimile {
 		require_once "lib/simple_html_dom.php";
 		add_action( 'admin_menu', array( $this, 'init_the_page' ) );	
 		add_action( 'admin_enqueue_scripts', array( $this, 'sa_facsimile' ) );
-   		$this->gallery_importer();
 	}
 
 	protected static $instance;
@@ -297,9 +298,21 @@ class SA_Facsimile {
 		return $this->row;
 	}
 
-	public function gallery_importer(){
-		require_once 'app.php';
+	protected static $gallery_importer;
+
+	public static function gallery_importer(){
+		if (!isset(static::$gallery_importer)) {
+			$className = 'SA_Gallery_Import';
+			static::$gallery_importer = new $className;
+		}
+		return static::$gallery_importer;		
 	}
 }
 
 SA_Facsimile::instance();
+
+require_once 'app.php';
+
+SA_Facsimile::gallery_importer();
+
+
